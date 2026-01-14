@@ -1,0 +1,3238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Planning and Control
+  </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+   <style>
+       .youtube-button {
+    /* تنسيق لجعله زرًا */
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px; /* حواف مستديرة */
+    cursor: pointer;
+    
+    /* ألوان يوتيوب */
+    background-color: #ff0000; /* أحمر يوتيوب */
+    color: #ffffff; /* نص أبيض */
+    border: none;
+    
+    /* تأثير عند المرور */
+    transition: background-color 0.3s ease;
+}
+
+.youtube-button:hover {
+    background-color: #cc0000;
+}
+        body {
+            font-family: 'Inter', 'Tajawal', sans-serif; 
+            background-color: #f1f5f9; 
+            overscroll-behavior: none;
+            margin: 0;
+        }
+        .slide {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+            height: 100%;
+            overflow: hidden;
+        }
+		
+        .slide-visible {
+            display: block;
+        }
+        .slide-hidden {
+            display: none !important;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .quiz-option {
+            transition: all 0.2s ease;
+        }
+        .quiz-option.correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: 600;
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+            font-weight: 600;
+        }
+        .quiz-option:disabled:not(.correct):not(.incorrect) {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+        }
+        .slide-content-wrapper {
+            height: calc(100% - 4rem - 1px);
+            overflow-y: auto;
+            padding-bottom: 2rem;
+        }
+        .slide-content-wrapper::-webkit-scrollbar { width: 8px; }
+        .slide-content-wrapper::-webkit-scrollbar-track { background: #e2e8f0; border-radius: 10px; }
+        .slide-content-wrapper::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+        .slide-content-wrapper::-webkit-scrollbar-thumb:hover { background: #1d4ed8; }
+        #video-modal-content { width: 90%; max-width: 900px; }
+        #youtube-iframe { aspect-ratio: 16 / 9; width: 100%; height: auto; }
+        .slide-header {
+            position: sticky;
+            top: 0;
+            background-color: rgba(241, 245, 249, 0.95);
+            backdrop-filter: blur(5px);
+            padding-top: 0.25rem;
+            padding-bottom: 0.75rem;
+            z-index: 5;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        /* Placeholder style for missing images */
+        img.placeholder-image {
+            background-color: #e2e8f0;
+            border: 2px dashed #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-weight: bold;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            position: relative;
+            /* توسيط المحتوى داخل body الجديد */
+            margin: 50px auto; 
+        }
+
+        .content-wrapper {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .training-card {
+            background-color: #0d1b3f;
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            width: 48%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            padding-top: 100px;
+        }
+
+        .card-header {
+            position: absolute;
+            top: -50px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .image-placeholder {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: white;
+            border: 5px solid #ab141c;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            opacity: 1; 
+        }
+
+        .list {
+            list-style: none;
+            padding: 0;
+            margin-top: 40px;
+            text-align: right;
+            font-size: 1.1em;
+            width: 100%;
+            padding-right: 20px;
+        }
+
+        .list li {
+            margin-bottom: 15px;
+        }
+
+        .timeline-bar {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background-color: #ab141c;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+        }
+
+        .timeline-text {
+            color: white;
+            font-weight: bold;
+            padding: 0 20px;
+            text-transform: uppercase;
+            font-size: 1.2em;
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .left-arrow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -20px;
+            width: 0;
+            height: 0;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+            border-right: 20px solid #ab141c;
+        }
+
+        .right-arrow::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -20px;
+            width: 0;
+            height: 0;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+            border-left: 20px solid #ab141c;
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md w-full p-4 z-10 flex justify-between items-center flex-shrink-0 border-b border-slate-200">
+        <div class="flex items-center min-w-0"> 
+            <div class="w-10 h-10 bg-blue-800 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm">
+                <!-- Icon representing Industrial Equipment -->
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a8 8 0 11-14.856 0M12 21a8 8 0 100-16 8 8 0 000 16z"></path></svg>
+            </div>
+            <div class="ml-3 truncate">
+                <h1 class="text-lg md:text-xl font-bold text-slate-900">Project Planning and Control</h1>
+            </div>
+        </div>
+        <div class="text-sm font-medium text-slate-500 flex-shrink-0 ml-2 bg-slate-100 px-3 py-1 rounded-full" id="slide-counter">Slide 1 / 18</div>
+    </header>
+
+    <!-- Main Slide Container -->
+    <main id="slide-container" class="flex-1 overflow-hidden p-4 md:p-8 lg:p-12 relative">
+        
+        <!-- Slide 0: Title -->
+        <section id="slide-0" class="slide slide-visible flex flex-col justify-center items-center text-center p-4">
+            <div class="bg-white p-10 md:p-16 rounded-2xl shadow-xl max-w-4xl w-full border-t-8 border-blue-800">
+                <span class="block text-sm font-bold text-blue-600 uppercase tracking-widest mb-2">Target Engineering Construction - National Emirates Training</span>
+                <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6">Project Planning and Control <br/></h1>
+                <div class="w-24 h-1 bg-yellow-500 mx-auto mb-8 rounded-full"></div>
+                <p class="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">A comprehensive competency-based course on industrial stationary assets, from Heat Exchangers to Separation Columns.</p>
+                        <button id="start-btn" class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-transform transform hover:scale-105">
+    Start Course
+</button>
+            </div>
+        </section>
+
+        <!-- Slide 1: CONTENT -->
+   <section id="slide-1" class="slide">
+    <div class="slide-content-wrapper">
+        <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 hover:shadow-md transition-shadow">
+                    
+                      <p style=" color: black;">
+				<strong>	How can this course benefit us?</strong><br><br>
+     This course is an opportunity to improve our professional skills by learning more about:
+<br>
+- The standard practice for project planning and control.
+<br>
+- Practical applications of this science in our business.
+
+				</p>
+                </div>
+                </div>
+        </div>
+    </div>
+</section>
+
+        <!-- Slide 2:  PROJECT PLANNING-->
+<section id="slide-2" class="slide">
+                     <div class=" bg-white p-10 md:p-16 ">
+        
+        <span class="block text-sm font-bold text-red-700 uppercase tracking-widest mb-2">TARGET QUALITY MANAGEMENT SYSTEM</span>
+        
+        <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-tight">
+            PROJECT PLANNING - CONCEPTS AND PRINCIPALS
+        </h1>
+        
+        <div class="w-24 h-1 bg-yellow-500 mx-auto mb-8 rounded-full"></div> 
+        
+        <div class="w-full">
+            <div class="flex justify-end">
+                <div class="text-4xl font-extrabold text-slate-800">
+                    <span class="text-red-700">T</span>ARGET
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+ <!-- Slide 3: The importance of process control -->
+        <section id="slide-3" class="slide">
+              <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+            <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">What is a “Project”?
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">
+                <p style=" color: black;">
+A Project is “a temporary endeavor undertaken to create a unique product, service, or result.”
+
+<br><br>
+	<strong>Attributes of projects:
+ </strong><br>
+1. Unique purpose
+2. Temporary
+3. Require resources
+4. Should have a primary sponsor and/or customer
+5. Involve uncertainty
+ <br>
+  <br>
+  
+
+				</p>
+            </div>
+            </div>
+			
+		<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">What is “Planning”?</h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden">
+        <br> 
+        <p style="color: black;">
+            Planning is a basic management function, it’s the process of setting goals, developing strategies, and outlining tasks and schedules to accomplish the goals. 
+            <br>
+        </p>
+
+        <div class="w-1/2 h-full bg-slate-100 overflow-hidden mx-auto flex justify-center">
+            <img src="images/Picture1.jpg"
+                 alt="صورة اجتماع تعريفي لـ HSE" 
+                 class="zoomable w-full h-full object-contain cursor-zoom-in">
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+        </section>
+
+        <!-- Slide 3: Categories of Planning -->
+       <section id="technical-soft-skills" class="slide">
+<div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+            <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Categories of Planning
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">
+			
+				  	 <div class="w-full h-full bg-slate-100 overflow-hidden">
+                     <img src="images/picture2.jpg"
+                          alt="صورة اجتماع تعريفي لـ HSE" 
+                          class="zoomable w-full h-full object-contain cursor-zoom-in" >
+                     
+                     </div>
+                
+            </div>
+
+
+            </div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">What is “Project Planning”?
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">
+
+              	  <p style=" color: black;">
+Project planning is walking through the project and getting it organized before it’s actually done. 
+
+<br> <br> 
+<strong>Principals of Project Planning</strong><br>
+
+1. The preliminary plans must finish before the start of execution. "A good plan today is better than a perfect plan tomorrow!".<br>
+
+2. The planning is a progress elaborated process (rolling planning).<br>
+
+3. Involve project personnel responsible for the work in creating the project schedule.<br>
+
+4. Include all aspects of the project such as scope, budget, schedule and quality in the planning process.
+<br>
+5. The plan should be realistic and should take the risk into consideration without padding.
+<br>
+6. Maintain a continuous flow of work with no idle periods.
+<br>
+7. Try to develop a flexible plan by having the minimum critical paths.
+<br>
+8. Keep the plan simple and summarized as possible.
+<br>
+9. Distribute the plan to all parties involved in the project.
+<br>
+10. The plan should be officially approved from all parties.
+<br>
+11. The plan is not expected to be precisely correct (80% is 100%).
+<br>
+				</p>
+				<p style=" color: red; " class="text-center"> 
+				<br>
+				<strong>“Failing to plan is planning to fail!".</strong>
+
+				</p>
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- Slide 4:PROJECT PLANNING PROCESSES-->
+		 <section id="slide-4" class="slide">
+           		   				                 <div class=" bg-white p-10 md:p-16 ">
+        
+        <span class="block text-sm font-bold text-red-700 uppercase tracking-widest mb-2">TARGET QUALITY MANAGEMENT SYSTEM</span>
+        
+        <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-tight" >
+           PROJECT PLANNING PROCESSES
+
+        </h1>
+        <div class="w-24 h-1 bg-yellow-500 mx-auto mb-8 rounded-full"></div> 
+        
+        <div class="w-full">
+            <div class="flex justify-end">
+                <div class="text-4xl font-extrabold text-slate-800">
+                    <span class="text-red-700">T</span>ARGET
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+		
+		 <!-- Slide 6: PROJECT PLANNING PROCESSES-->
+<section id="slide-5" class="slide">
+   
+         <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+            <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">PMBOK ® GUIDE
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">	
+                  <p style=" color: red; font-size:20px">
+				  <br>
+				<strong>A Guide to The Project Management Body of Knowledge (PMBOK® GUIDE) </strong><br><br>
+				</p >
+				<p style=" color: black;">
+is a standard framework for how to think about project management created by The Project Management Institute (PMI®) .
+<br>
+
+				</p>
+            </div>
+
+
+            </div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">PMBOK ® GUIDE
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">
+			        <div class="flex justify-center items-center w-full py-2">
+            <div class="w-2/3 bg-slate-100 overflow-hidden rounded-lg shadow-sm"> 
+			<img src="images/Picture3.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+        </div>
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+
+
+        <!-- Slide 9:PROJECT PLANNING PROCESSES  -->
+        <section id="slide-8" class="slide">
+         <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+            <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">PROJECT PLANNING PROCESSES
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">	
+				  	                  <p style=" color: black;">
+	
+Project management is achieved by the appropriate application and integration of 42 processes organized into 5 process groups
+
+<br><br>
+				</p> 
+				    <div class="w-full bg-slate-100 overflow-hidden rounded-lg shadow-sm"> 
+			<img src="images/Picture4.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+			
+				  	                  <p style=" color: blue;">
+	<br><br>
+The planning process group consists of 20 sequential processes.
+
+<br><br>
+				</p > 
+				<p style=" color: black;"> 
+				<strong>Process Groups</strong><br>
+				</p>
+				
+				  <div class="w-full bg-slate-100 overflow-hidden rounded-lg shadow-sm"> 
+			<img src="images/Picture5.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+			<p style=" color: black;" class="text-center"> 
+				<br><strong>Process Groups Interact in a Phase or Project</strong>
+				</p>
+            </div>
+
+
+            </div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">
+		
+   <div class="w-full bg-slate-100 overflow-hidden rounded-lg shadow-sm" style="padding-top:250px"> 
+			<img src="images/Picture6.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+			
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+
+ <!-- Slide 10:Develop Project Management Plan-->
+        <section id="slide-9" class="slide">
+		                  <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+            <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">1. Develop Project Management Plan
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">	
+				  <p style=" color: black;">
+	The Project Management Plan is a document that contains the information for how the project will be planned, executed, monitored and controlled, and closed.
+
+<br><br></p>
+				  <p style=" color: red;">
+
+Schedule Management Plan
+<br>	</p>
+ <p style=" color: black;">
+(some times called Planning Execution Plan) is a part of the Project Management Plan.<br>
+It could be formal (included in the contract or requested from the contractor), or informal.<br><br>
+The purpose of this document is to illustrate the planning and follow-up deliverables and techniques. It includes information like:<br>
+- The scheduling methodology and scheduling software to be used on the project.<br>
+- Types and frequency of reports.<br>
+- The performance measures that will be used, the calculations, and the weighting factors (effort, cost, or price).<br>
+- How schedule variances will be managed.<br>  
+- Schedule change control procedure.
+<br>
+</p>
+			
+            </div>
+
+
+            </div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header"> 2. Collect Requirements
+
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">
+			
+					<br> 
+				  <p style=" color: red;">
+Defining what is and is not included in the project.
+Including both:
+
+<br><br></p>
+				  <p style=" color: black;">
+
+Product scope (the features and functions of the product of the project) 
+and
+<br><br>		</p>
+ <p style=" color: red;">
+Project scope (the work you need to do to deliver the product of the project such as meetings, reports, analysis, etc.)
+
+<br><br>
+</p> 
+<h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header text-center">  3. Define Scope
+
+</h3>
+<p style=" color: black;">
+
+Study the contract in order to identify the following:
+<br>
+** The obligations of each party (Responsibility Assignment Matrix).
+<br>
+
+** The project major constraints and milestones and any subjected liquidated damages or bonuses.
+<br>
+** Related approved schedules, if any, such as the interface contractors' schedules or the nominated subcontractors' schedules in order to avoid any conflict in dates.
+<br><br>
+In this phase we start documenting the Constraints and Assumptions.
+<br>
+
+</p>
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+		
+		<!-- Slide 11: Create WBS-->
+        <section id="slide-10" class="slide">
+				                  <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+            <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">4. Create WBS
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">	
+				  <p style=" color: red;">
+				<strong>Work Breakdown Structure
+</strong><br>
+</p> 
+			  <p style=" color: black;">
+				
+- A graphical of the hierarchy of the project. <br>
+
+- WBS enables the clear definition and communication of project scope and performs a critical role as a monitoring and controlling tool. 
+<br><br>
+</p> 
+ 	 <div class="w-full h-full bg-slate-100 overflow-hidden">
+                     <img src="images/picture7.jpg"
+                          alt="صورة اجتماع تعريفي لـ HSE" 
+                          class="zoomable w-full h-full object-contain cursor-zoom-in" >
+                     
+                     </div>
+            </div>
+
+
+            </div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Create WBS…
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">
+			
+					<br> 
+<ul class="space-y-3 text-sm text-slate-700">
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>Scope Definition: WBS identifies all work; if it's not in the WBS, it's not part of the project.</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>Match the contractual WBS; decompose by type, discipline, phase, or location.</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>Similar project WBS can be used as a reliable basis.</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>Complete higher levels before breaking down further.</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>The 100% Rule: Sum of elements at each level must represent 100% of the parent element.</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>The entire project is included in the highest levels; some branches may be deeper than others.</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>Lowest level is the Work Package; level above is the Control Account.</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>Elements should be named using Nouns rather than Actions.</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>Cost and time are estimated at the Work Package or activity level.</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>The WBS Dictionary provides detailed descriptions for each Work Package.</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>The WBS development process is iterative.</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>Code of Accounts:A numbering system to identify each WBS item uniquely.</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-blue-600 font-bold ml-2">•</span>
+                <span>Once completed, data should be entered into scheduling software.</span>
+            </li>
+        </ul>
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+		
+				<!-- Slide 11: Define Activities -->
+        <section id="slide-10" class="slide">
+		   		  <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+            <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">5. Define Activities
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">	
+				  <p style=" color: black;">
+The process of decomposing the WBS further into activity level; 
+
+<br><br></p>
+				  <p style=" color: red;">
+
+An Activity: a level small enough to schedule, estimate, and manage.
+
+<br><br>	</p>
+ <p style=" color: black;">
+* The output is “activity list”
+* Roll Wave Planning is a form of progressive elaboration where the work in the near term is planned in details and future work to be planned at a higher level 
+
+<br>
+</p>
+	<h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header text-center">   6. Sequence Activities
+</h3>
+<p style=" color: black;">
+
+	The process of sequencing the activities and milestones to know how the work will be done.
+<br><br>
+* It produces “Network Diagram” (some times incorrectly called “PERT chart”).<br>
+* If plotted out against time, it would be called time-scale schedule network diagram.<br>
+
+<br>
+
+</p>		
+            </div>
+
+
+            </div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header"> 6. Sequence Activities
+
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">
+			
+					<br> 
+				  <p style=" color: black;">
+Methods to draw the Network Diagrams:
+
+<br>
+1. Arrow Diagramming Method (ADM) or Activity on Arrow (AOA)<br>
+2. Graphic Evaluation and Review Technique (GERT)<br>
+3. Precedence Diagramming Method (PDM) or Activity on Node (AON)<br>
+<br>
+</p>
+  <p style=" color: red;" class="text-center">
+
+1. Arrow Diagramming Method (ADM)
+<br>	</p>
+				  <p style=" color: black;">
+- Arrows are used to represent activities<br>
+- The node (i.e. a circle) is used to represent a dependency<br>
+- Uses only a Finish-to-Start relationship<br>
+<strong>- Not commonly used nowadays</strong>
+<br>
+</p>
+	  <div class="w-full bg-slate-100 overflow-hidden rounded-lg shadow-sm"> 
+			<img src="images/Picture8.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+		
+		 <!-- Slide 13: Sequence Activities…-->
+<section id="slide-12" class="slide flex items-center justify-center min-h-screen">
+    <div class="slide-content-wrapper w-full">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-center relative pt-20" style="padding-bottom: 80px;">  
+
+            <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px;">
+                
+                <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+                    Sequence Activities…
+                </h3>
+
+                <div class="bg-gray-100 flex flex-col items-center h-full overflow-hidden">    
+                    <p style="color: red; font-size:20px;" class="w-full text-center"> 
+                        <strong>Exercise</strong>
+                        <br><br>  
+                    </p>
+                    <p style="color: black; font-size:20px;" class="w-full text-center">
+                        Draw the following Network Diagram:
+                        <br>
+                        - Activities A can start immediately.
+                        <br>
+                        - Activity B & C can start after finishing A.
+                        <br>
+                        - Activity D can start after activity B is finished.
+                        <br>
+                        - Activity E can start after activity C is finished.
+                        <br>
+                        - Activity F starts after the completion of B & E.
+                        <br>
+                        - Activity G is the last activity.
+                        <br>  
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+		
+		 <!-- Slide 13: Sequence Activities…-->
+<section id="slide-12" class="slide">
+           <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+            <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Sequence Activities…
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">	
+				  
+				    <p style="color: red; font-size:20px;" class="w-full text-center"> 
+                        <strong>2. Graphic Evaluation and Technique (GERT)</strong><br>
+                        <br>
+                    </p>
+				  <p style="color: black; font-size:20px;">
+				  A modification that allows loops between activities.
+				  </p>
+				 	<div class="w-full h-full bg-slate-100 overflow-hidden">
+                     <img src="images/picture9.jpg"
+                          alt="صورة اجتماع تعريفي لـ HSE" 
+                          class="zoomable w-full h-full object-contain cursor-zoom-in" >
+                     
+                     </div>
+
+            </div>
+
+
+            </div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Sequence Activities…
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+    <p style="color: red; font-size:20px;" class="w-full text-center"> 
+                        <strong>3. Precedence Diagramming Method (PDM) Activity-On-Node (AON) </strong><br>
+                        <br>
+                    </p>
+				  <p style="color: black; font-size:20px;">
+Graphical representation of activities, precedence, leads, and lags
+				  </p>              	 
+			<div class="w-full h-full bg-slate-100 overflow-hidden">
+                     <img src="images/picture10.jpg"
+                          alt="صورة اجتماع تعريفي لـ HSE" 
+                          class="zoomable w-full h-full object-contain cursor-zoom-in" >
+                     
+                     </div>
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+		
+		<!-- Slide 14: Sequence Activities… -->
+      <section id="slide-14" class="slide">
+	     <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+            <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Sequence Activities…
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">	
+  <p style="color: red; font-size:20px;" class="w-full text-center"> 
+                        <strong>4. Types of Logical Relationships </strong><br>
+                        <br>
+                    </p>
+					 <p style="color: red; font-size:20px; padding-left:400px">
+<strong>Precedence Diagramming Method  <br></strong>
+				  </p>  
+				  <p style="color: black; font-size:20px;">
+1. FS  (the basic relationship)  <br>
+				  </p>  
+				  	      <div class="flex justify-center items-center w-full py-2">
+            <div class="w-2/3 bg-slate-100 overflow-hidden rounded-lg shadow-sm"> 
+			<img src="images/picture11.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+        </div>
+					   <p style="color: black; font-size:20px;">
+2. SS  <br>
+				  </p> 
+				    	      <div class="flex justify-center items-center w-full py-2">
+            <div class="w-2/3 bg-slate-100 overflow-hidden rounded-lg shadow-sm"> 
+			<img src="images/picture12.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+        </div>
+            </div>
+
+
+            </div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Sequence Activities…
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">	
+  <p style="color: red; font-size:20px;" class="w-full text-center"> 
+                        <strong>4. Types of Logical Relationships </strong><br>
+                        <br>
+                    </p>
+					 <p style="color: red; font-size:20px; padding-left:400px">
+<strong>Precedence Diagramming Method  <br></strong>
+				  </p>  
+				  <p style="color: black; font-size:20px;">
+3. FF  
+ <br>
+				  </p>  
+				        <div class="flex justify-center items-center w-full py-2">
+            <div class="w-2/3 bg-slate-100 overflow-hidden rounded-lg shadow-sm"> 
+			<img src="images/picture13.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+        </div>
+					   <p style="color: black; font-size:20px;">
+4. SF  (rarely used)
+<br>
+				  </p> 
+				    	      <div class="flex justify-center items-center w-full py-2">
+            <div class="w-2/3 bg-slate-100 overflow-hidden rounded-lg shadow-sm"> 
+			<img src="images/picture14.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+        </div>
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+		
+	<!-- Slide 15: Sequence Activities…-->
+      <section id="slide-14" class="slide">
+		     <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+           <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Sequence Activities…
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">	
+				   <p style="color: red; font-size:20px; padding-left:400px">
+<strong>Precedence Diagramming Method  <br></strong>
+				  </p> 
+  <p style="color: green; font-size:20px;" > 
+                        The logical relationship can be used with:<br>
+                        <br>
+                    </p>
+					 
+				  <p style="color: black; font-size:20px;">
+A lag  (e.g. FS +6 days); meaning finish A, wait 6 days, then start B
+  <br>
+				  </p>  
+				  	      <div class="flex justify-center items-center w-full py-2">
+            <div class="w-2/3 bg-slate-100 overflow-hidden rounded-lg shadow-sm"> 
+			<img src="images/picture15.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+        </div>
+					   <p style="color: black; font-size:20px;">
+Or a lead (e.g. FS -4 days); B can start 4 days before A is finished
+  <br>
+				  </p> 
+				    	      <div class="flex justify-center items-center w-full py-2">
+            <div class="w-2/3 bg-slate-100 overflow-hidden rounded-lg shadow-sm"> 
+			<img src="images/picture16.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+        </div>
+            </div>
+
+
+            </div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Sequence Activities…
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+				    <p style="color: red; font-size:20px; padding-left:400px">
+<strong>Precedence Diagramming Method  <br></strong>
+				  </p> 
+					    	      <div class="flex justify-center items-center w-full py-2">
+            <div class="w-2/3 bg-slate-100 overflow-hidden rounded-lg shadow-sm"> 
+			<img src="images/picture17.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+        </div>	
+			   <p style="color: black; font-size:20px;">
+			   <br>
+Dependencies are either:<br>
+ 1. Mandatory; e.g. contractual requirements<br>
+ 2. Discretionary; e.g. the way the project manager prefers<br> 
+ 3. External; e.g. material delivery
+
+  <br>
+				  </p> 
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+			
+				 <!-- Slide 16:Estimate Activity Durations…-->
+<section id="slide-12" class="slide">
+   	     <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+           <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header"> 7. Estimate Activities Resources
+
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">	
+				   <p style="color: black; ">
+<strong>Once activities are sequenced, type and quantity of needed resources are determined
+ <br></strong>
+ - Resources include equipment, materials, and people<br>
+- Review resource availability and capacity<br>
+- Solicit expert judgments<br>
+- Analyze alternative ways of completing the work<br>
+- Break the activity down further if the activity is too complex to resource estimate<br>
+- Focus on the main and critical resources<br>
+- Review historical information and review the company policies on resource uses<br>
+
+				  </p> 
+				  	     
+					   <p style="color: black; font-size:20px;" class="text-center">
+Using Standard Norms  <br>
+				  </p> 
+				  
+				     <div class="flex justify-center items-center w-full py-2">
+					 
+            <div class="w-2/3 bg-slate-100 overflow-hidden rounded-lg shadow-sm"> 
+			<img src="images/picture18.jpg"
+                     alt="صورة اجتماع تعريفي لـ HSE" 
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+        </div>	    
+            </div>
+
+
+            </div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Estimate Activity Resources…
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+				    <p style="color: black; font-size:20px;" class="text-center">
+<strong>Enterprise Resource Planning  <br></strong>
+				  </p> 
+				  <div class="w-full h-full bg-slate-100 overflow-hidden">
+                     <img src="images/picture19.jpg"
+                          alt="صورة اجتماع تعريفي لـ HSE" 
+                          class="zoomable w-full h-full object-contain cursor-zoom-in" >
+                     
+                     </div>	
+<br>					 
+			<h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header text-center">    8. Estimate Activities Durations
+</h3>
+<p style=" color: black;">
+To estimate you need to refer to:
+<br>
+* Resource requirements and capacity <br>
+* Historical information<br>
+* Opinion of people doing the work <br>
+
+</p>
+<p style=" color: red;">
+
+Note:<br> </p>
+<p style=" color: black;">
+Record your assumptions during estimating.
+<br>
+ </p>
+	
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+			
+			<!-- Slide 16:Estimate Activity Durations…-->
+<section id="slide-12" class="slide">
+       	     <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+            <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">8. Estimate Activity Durations…
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">
+				  			 	  <p style=" color: black;">
+How is estimating done?
+<br><br>
+- Analogous Estimate(Top-down): can be done for a project or for an activity. It’s a form of Expert Judgment. 
+
+<br><br>
+- Parametric Estimating: uses mathematical model to calculate the projected time  <br>
+*Results of parametric estimates can become heuristics.
+
+<br><br>
+-One-time Estimate:<br> 
+	*one estimate per activity is received! 
+<br><br>
+- Three-point Estimates: (Program Evaluation & Review Technique – PERT analysis)<br>
+	Expected Activity Duration = (P+4M+O)/6	<br>
+	Where: O = Optimistic, P = Pessimistic, M = Most Likely . 
+<br>
+</p>			  			
+            </div>
+
+
+            </div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+        8. Estimate Activity Durations…
+    </h3>
+
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+        <div class="w-full h-full bg-slate-100 overflow-hidden">
+            
+            <p style="color: blue; font-size:20px; padding-left:400px">
+<strong>Using Standard Norms  <br></strong>
+				  </p> 
+  <p style="color: red; " > 
+Example:
+                        <br> <br>
+                    </p>
+					 
+				  <p style="color: black; ">
+Estimate the duration required to form 1500 m2 of RC panels if you know that:
+according to the norms the crew productivity is 100 m2/day.
+the maximum capacity is 2 crews.
+  <br> <br>
+				  </p>    
+<p style="color: blue; " class="text-center">
+  Simply… <br> <br>
+
+Duration = Quantity/Productivity Rate 
+                 = 1500 / (100 x 2) <br> = 7.5 ≈ 8 working days
+
+				  </p>  
+            
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+        </section>
+		
+		 <!-- Slide 16: Develop Schedule-->
+<section id="slide-12" class="slide">
+        	     <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+            <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+				     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">9. Develop Schedule
+</h3>
+                  <div class="bg-gray-100 flex flex-col h-full overflow-hidden">
+		 <p style="color: black; font-size:20px;">
+Once a network diagram and estimates are completed, it’s time to put the information into a schedule.
+<br><br>
+				  </p> 
+  <p style="color: red; " > 
+What is the difference between a Time Estimate and a Time Schedule?
+
+                        <br> <br>
+                    </p>	
+<p style="color: black; ">
+To develop the schedule, you need to have…<br>
+
+
+- Understanding of the work to be done (SOW, WBS, WBS Dictionary)<br>
+- Constraints<br>
+- Defined activities (Activity list)<br>
+- The order of how the work will be done (network diagram)<br>
+- An estimate of the duration of each activity (activity duration estimates)<br>
+- An estimate of the resource needed (activity resource estimates)<br>
+- Company calendar <br>
+- An understanding of the availability of resources <br>
+	(resource calendars and resource pool)
+
+</p>					
+            </div>
+
+
+            </div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+        9. Develop Schedule…
+    </h3>
+
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+        <div class="w-full h-full bg-slate-100 overflow-hidden">
+            
+            <p style="color: blue;" class="text-center">
+<strong>Network Analysis  <br></strong>
+				  </p> 
+  <p style="color: black; " > 
+The schedule can be developed using the following techniques:
+                        <br> <br>
+                    </p>
+					 
+				  <p style="color: red; ">
+I. Critical Path Method
+
+  <br> 
+				  </p>    
+<p style="color: black;" >
+		The most commonly used technique.
+				  </p>  
+           				  <p style="color: red; ">
+II. Line of Balance
+
+  <br> 
+				  </p>    
+<p style="color: black; " >
+		For projects with multi repetitive units.
+				  </p> 
+          				  <p style="color: red; ">
+III. PERT
+  <br> 
+				  </p>    
+<p style="color: black; " >
+		For projects with high degree of uncertainty with duration estimates.
+
+				  </p>  
+          				  <p style="color: red; ">
+VI. What-if Scenario
+  <br> 
+				  </p>    
+<p style="color: black; " >
+		To calculate the effect of expected changes on the project.
+
+				  </p>  
+				   <p style="color: black; ">
+		Then it might need to be modified using:
+  <br> 
+				  </p>    
+      				  <p style="color: red; ">
+V. Compressing
+  <br> 
+				  </p>    
+<p style="color: black; " >
+	For time limited projects.
+
+				  </p>  
+				  <p style="color: red; ">
+		IV. Resource Leveling
+		
+  <br> 
+				  </p>    
+<p style="color: black; " >
+For resource limited projects. <br> <br>
+				  </p>  				  
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+        </section>
+				
+<!-- Slide 17: Develop Schedule…-->
+<section id="slide-12" class="slide">
+    <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+      Develop Schedule…
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+         <p style="color: blue; padding-left:450px" >
+<strong>Network Analysis  <br></strong>
+				  </p> 
+        <p style=" color: red;" class="mb-4 text-center">
+		I. Critical Path Method
+
+        </p>
+						 	  <p style=" color: black;">
+							  
+		CPM includes determining …
+<br>
+- the longest duration in the network diagram<br>
+- the earliest and latest dates an activity can start<br>
+- the earliest and latest dates an activity can finish<br>
+
+<br>
+Example I:
+<br>
+</p>
+				<div class="w-fullh-full bg-slate-100 overflow-hidden">
+                     <img src="images/Picture20.jpg"
+                          alt="صورة اجتماع تعريفي لـ HSE" 
+                          class="zoomable w-full h-full object-contain cursor-zoom-in" >
+                     
+                     </div>
+        </div>
+</div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Develop Schedule…
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+				 	  <p style=" color: black;" class="text-center">
+ <strong ><br>Network Analysis
+LOB<br>
+Example I
+ </strong ></p>
+					<div class="w-full h-full bg-slate-100 overflow-hidden">
+                     <img src="images/picture21.jpg"
+                          alt="صورة اجتماع تعريفي لـ HSE" 
+                          class="zoomable w-full h-full object-contain cursor-zoom-in" >
+                     
+                     </div>
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+
+				 <!-- Slide 17:  Develop Schedule…-->
+<section id="slide-12" class="slide">
+      <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+        Develop Schedule…
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        
+        <p style=" color: black;" class="mb-4">
+<strong>Network Analysis
+Schedule Compressing…</strong><br>
+<br>
+The most common methods to decrease the schedule duration are:
+<br>
+- Concurrent Engineering.
+<br>
+- Fast Tracking.
+<br>
+- Crashing.
+
+<br>
+        </p>
+        <p style=" color: red;" class="mb-4">
+<strong>Concurrent Engineering:
+</strong>
+<br></p>
+ <p style=" color: black;" class="mb-4">
+Have the people who will participate in the execution of the project in it’s early phases (as design and initial planning),
+ so that they concurrently analyze the work and get ready for what they are going to be doing once the project reaches them.
+<br>
+   </p>     
+        </div>
+</div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Develop Schedule…
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+                   <p style=" color: black;" class="mb-4">
+<strong>Network Analysis
+Schedule Compressing…</strong><br>
+        </p>
+				<p style=" color: red;" class="mb-4">
+<strong>Fast Tracking: </strong>
+<br>  </p>
+<p style=" color: black;" class="mb-4">
+Doing critical path activities in parallel that originally were planned in series 
+<br>
+        </p>
+		  <div class="w-full h-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/Picture22.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>
+        <p style=" color: red;" class="mb-4">
+		<br>
+<strong>Fast Tracking requires more attention and may increase the in higher risk.
+</strong>
+<br></p>     
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+		
+	 <!-- Slide 18:   Develop Schedule…-->
+<section id="slide-12" class="slide">
+          <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+        Develop Schedule…
+
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+
+                   
+                   <p style=" color: black;" class="mb-4">
+<strong>Network Analysis
+Schedule Compressing…</strong><br>
+        </p>
+        <p style=" color: red;" class="mb-4">
+<strong>Crashing: 
+</strong>
+<br></p>
+ <p style=" color: black;" class="mb-4">
+making cost and schedule tradeoffs to determine how to obtain the greatest amount of schedule
+ compression at the least incremental cost while maintaining the project scope
+<br><br>
+- Crashing always results in cost increase.<br>
+- Crashing may involve moving resources around within the project<br>
+- When crashing or fast-tracking, always check for choices<br>
+- When asked for change, you analyze then let the management and client know the impact of their request. <br>
+
+   </p> 
+            
+        </div>
+</div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Develop Schedule…
+
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+					 
+<p style=" color: black;" class="mb-4">
+<strong>Network Analysis
+Resource Leveling…
+</strong><br>
+        </p>
+
+ <p style=" color: black;" class="mb-4">
+Now draw the preliminary histogram, what do we have to do?
+<br><br>
+   </p> 
+		<div class="w-fullh-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/Picture23.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>		
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+
+	 <!-- Slide 19: Develop Schedule…-->
+<section id="slide-12" class="slide">
+           <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+        Develop Schedule…
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+            <p style=" color: black;" class="mb-4">
+<strong>Network Analysis
+Resource Leveling…
+</strong><br>
+        </p>
+		<div class="w-fullh-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/picture24.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>	
+ 
+
+        </div>
+</div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Develop Schedule…
+
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+				 
+           <p style=" color: black;" class="mb-4">
+<strong>Network Analysis
+Resource Leveling…
+</strong><br>
+        </p>
+		<div class="w-fullh-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/picture25.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>	
+ 			
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+
+<!-- Slide 191: Develop Schedule… -->
+<section id="slide-12" class="slide">
+              <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+Develop Schedule…
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+             <p style=" color: black;" class="mb-4">
+<strong>Network Analysis
+Resource Leveling…
+</strong><br>
+        </p>
+		<div class="w-fullh-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/Picture26.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>	
+ 			
+        </div>
+</div>
+			
+		<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+        Develop Schedule…
+    </h3>
+
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">  
+        
+              <p style=" color: black;" class="mb-4">
+<strong>Schedule Constraints
+</strong><br>
+        </p>
+		      <p style=" color: red;" class="mb-4">
+<strong>Start on or after
+</strong>
+<br></p>
+ <p style=" color: black;" class="mb-4">
+- Prevents the schedule activity from being scheduled to start earlier than an imposed date.<br>
+- It impacts the early dates only if the imposed date is later than the network calculated early start.<br>
+   </p> 
+   		      <p style=" color: red;" class="mb-4">
+<strong>Start on or before
+</strong>
+<br></p>
+ <p style=" color: black;" class="mb-4">
+	- Prevents the schedule activity from being scheduled to start later than an imposed date.<br>
+	- It impacts the late dates only if the imposed date is earlier than the network calculated late start.
+<br>
+   </p> 
+   		      <p style=" color: red;" class="mb-4">
+<strong>Start on
+</strong>
+<br></p>
+ <p style=" color: black;" class="mb-4">
+	It sets the early start equal to late start equal to the imposed date taking into consideration the network calculations.
+<br>
+   </p> 
+        </div>
+</div>
+        </div>
+    </div>
+        </section>
+		
+	 <!-- Slide 20: Develop Schedule…-->
+<section id="slide-12" class="slide">
+               <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+	 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Develop Schedule…
+</h3>
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+              <p style=" color: black;" class="mb-4">
+<strong>Schedule Constraints
+</strong><br>
+        </p>
+		      <p style=" color: red;" class="mb-4">
+<strong>Finish on or after
+</strong>
+<br></p>
+ <p style=" color: black;" class="mb-4">
+- Prevents the schedule activity from being scheduled to finish earlier than an imposed date<br>
+- 	It impacts the early dates only if the imposed date is later than the network calculated early finish.
+<br>
+   </p> 
+   		      <p style=" color: red;" class="mb-4">
+<strong>Finish on or before
+</strong>
+<br></p>
+ <p style=" color: black;" class="mb-4">
+	- Prevents the schedule activity from being scheduled to finish later than an imposed date.<br>
+	- It impacts the late dates only if the imposed date is earlier than the network calculated late finish.
+<br>
+   </p> 
+   		      <p style=" color: red;" class="mb-4">
+<strong>Finish on
+</strong>
+<br></p>
+ <p style=" color: black;" class="mb-4">
+		It sets the early finish equal to late finish equal to the imposed date taking into consideration the network calculations.
+<br>
+   </p> 
+        </div>
+			 </div>
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Develop Schedule…
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+
+              <p style=" color: black;" class="mb-4">
+<strong>Schedule Constraints
+</strong><br>
+        </p>
+		      <p style=" color: red;" class="mb-4">
+<strong>Mandatory Start
+</strong>
+<br></p>
+ <p style=" color: black;" class="mb-4">
+		 It sets the early start equal to late start equal to the imposed date.
+
+<br>
+   </p> 
+   		      <p style=" color: red;" class="mb-4">
+<strong>Mandatory Finish
+</strong>
+<br></p>
+ <p style=" color: black;" class="mb-4">
+		It sets the early finish equal to late finish equal to the imposed date. 
+<br>
+   </p> 
+   		      <p style=" color: red;" class="mb-4">
+<strong>As late As Possible
+</strong>
+<br></p>
+ <p style=" color: black;" class="mb-4">
+		Causes the activity to be scheduled to finish on the last date without delaying successor activities.
+<br>
+   </p> 
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+
+<!-- Slide 201: Develop Schedule…-->
+<section id="slide-12" class="slide">
+      <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Develop Schedule…</h3>
+
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        <p style="color: black;" class="mb-4">
+            <strong>Schedule Display</strong><br><br>
+            	The schedule can be detailed to be used for execution and follow-up, or summarized to be included in contracts or upper management reports.
+ </p>
+		
+            <div class="w-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+			<img src="images/Picture27.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in"> 
+            </div>
+        </div>
+</div>
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Schedule Display…
+
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+		  <p style=" color: black;">
+	The schedule can be presented in tabular form or graphically using one of the following formats:
+<br><br>
+
+</p>
+					<div class="w-full h-full bg-slate-100 overflow-hidden">
+                     <img src="images/Picture28.jpg"
+                          alt="صورة اجتماع تعريفي لـ HSE" 
+                          class="zoomable w-full h-full object-contain cursor-zoom-in" >
+                     
+                     </div>
+	
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+		
+	 <!-- Slide 21: Develop Schedule…-->
+<section id="slide-12" class="slide">
+           	  <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Develop Schedule…</h3>
+
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        <p style="color: black;" class="mb-4">
+            <strong>Common Abbreviations</strong><br><br>
+Here are some other definitions and acronyms used in the O&G-industry contracts and schedules:
+ </p>
+      <p style="color: black;" class="mb-4">
+            <strong style="color: red;">Project Coming into-force: </strong>Commencement Date / Effective Date
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">Mechanical Completion:  </strong>Ready for commissioning
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">Project Completion:  </strong>Ready for startup
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">EPC:  </strong>Engineering-Procurement-Construction
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">EPCM:  </strong>Engineering-Procurement-Construction management
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">Shall:  </strong>Mandatory Requirement
+
+ </p>
+
+        <p style="color: black;" class="mb-4">
+            <strong style="color: red;">Should:   </strong>Strongly Recommended
+
+ </p>
+
+        </div>
+</div>
+		 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Develop Schedule…</h3>
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+            <p style="color: black;" class="mb-4">
+	<strong>Common Abbreviations</strong><br><br>
+ </p>
+      <p style="color: black;" class="mb-4">
+            <strong style="color: red;">EBS:  </strong>Enterprise Breakdown Structure
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">OBS:   </strong>Organization Breakdown Structure
+
+ </p>
+ 
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">CBS:   </strong>Cost Breakdown Structure
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">RBS:   </strong>Resource Breakdown Structure
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">PERT:   </strong>Primavera Easy Relationship Tracking
+ </p>
+ 
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">PHA:   </strong>Preliminary hazard analysis
+
+ </p>
+        <p style="color: black;" class="mb-4">
+            <strong style="color: red;">HAZOP:    </strong>Hazard and operability study
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">IFF:   </strong>Issued For FEED (Front End Engineering Design)
+
+ </p>
+
+        </div>
+			 </div>
+        </div>
+    </div>
+        </section>
+
+	 <!-- Slide 211: Develop Schedule…-->
+<section id="slide-12" class="slide">
+	     <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+	
+			 
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Develop Schedule…
+
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+            <p style="color: black;" class="mb-4">
+	<strong>Common Abbreviations</strong><br><br>
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">IFA:    </strong>Issued For Approval
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">IFD:    </strong>Issued For Design
+
+ </p>
+ 
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">IFI:    </strong>Issued For Inquiry (MRQ)
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">IFC:    </strong>Issued For Construction
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">P&IDs:    </strong>Piping & Instrument Diagrams
+
+ </p>
+
+        <p style="color: black;" class="mb-4">
+            <strong style="color: red;">ISOs:     </strong>Isometric Drawings
+
+ </p>
+
+        <p style="color: black;" class="mb-4">
+            <strong style="color: red;">GAs:      </strong>General Arrangement Drawings
+
+ </p>
+
+         <p style="color: black;" class="mb-4">
+            <strong style="color: red;">60% Engineering, 90% Engineering:      </strong>Engineering milestones
+
+ </p>
+<p style="color: black;" class="mb-4" >
+    <strong style="color: red;">RFQ: </strong>Request for quotation (bidding)
+</p>
+
+<p style="color: black;" class="mb-4" >
+    <strong style="color: red;">MRQ: </strong>Material requisition
+</p>
+
+<p style="color: black;" class="mb-4">
+    <strong style="color: red;" >TER: </strong>Technical evaluation report
+</p>
+
+<p style="color: black;" class="mb-4">
+    <strong style="color: red;">VPR: </strong>Vendor prints
+</p>
+
+            </div>
+            </div>
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Develop Schedule…</h3>
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+           <p style="color: black;" >
+    <strong>Common Abbreviations</strong><br><br>
+</p>
+
+
+<p style="color: black;" class="mb-4">
+    <strong style="color: red;">MRP: </strong>Manufacturing resource planning
+</p>
+
+<p style="color: black;" class="mb-4">
+    <strong style="color: red;">MTO: </strong>Material take-off
+</p>
+
+<p style="color: black;" class="mb-4">
+    <strong style="color: red;">PO: </strong>Purchase order
+</p>
+
+<p style="color: black;" class="mb-4">
+    <strong style="color: red;">OSBL: </strong>Outside battery limits
+</p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">LLI:     </strong>
+			An activity with no predecessor, successor or both.
+
+ </p>
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">Open End:    </strong>
+			Issued For Design
+
+ </p>
+ 
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">LOE:    </strong>
+			Level of Effort: Support-type activity, which does not produce definitive end product. It is generally characterized by a uniform rate of work performance over a period of time determined by the activities supported.
+
+ </p>
+
+       <p style="color: black;" class="mb-4">
+            <strong style="color: red;">Hammock:    </strong>
+			A summary activity.
+
+ </p>
+
+        </div>
+			 </div>
+        </div>
+    </div>
+        </section>
+
+
+	 <!-- Slide 213: Estimate Costs -->
+<section id="slide-12" class="slide">
+        <div class="slide-content-wrapper">
+
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+	 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">10. Estimate Costs </h3>
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+      <p style=" color: black;" class="mb-4">
+<strong>Cost can be variable or fixed </strong> 
+ <br><br> </p>
+       <p style=" color: black;" class="mb-4">
+<strong style=" color: red;">- Variable Cost:  </strong> Changes with the amount of work.
+ <br>
+<strong style=" color: red;">- Fixed Cost:  </strong> Does not change with amount of work.
+ <br><br> </p>
+      <p style=" color: black;" class="mb-4">
+<strong>Cost can be direct or indirect </strong> 
+ <br><br> </p>
+       <p style=" color: black;" class="mb-4">
+<strong style=" color: red;">- Direct Cost:   </strong> Directly attributable to the work on the project.
+ <br>
+<strong style=" color: red;">- Indirect Cost:   </strong>overheads for more than one project.
+ <br><br> </p>
+
+ </p >
+ <p style=" color: black;" class="mb-4">
+Examples:
+ <br>
+ </p>
+ <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; color: black;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid black; padding: 10px;"></th>
+      <th style="border: 1px solid black; padding: 10px; color: #b22222; text-align: left; font-size: 1.2em;">Direct Cost</th>
+      <th style="border: 1px solid black; padding: 10px; color: #b22222; text-align: left; font-size: 1.2em;">Indirect Cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid black; padding: 10px; color: #b22222; font-weight: bold; font-size: 1.1em;">Variable Cost</td>
+      <td style="border: 1px solid black; padding: 10px; vertical-align: top;">
+        <ul style="margin: 0; padding-left: 20px;">
+          <li>Material cost</li>
+          <li>Labor cost</li>
+        </ul>
+      </td>
+      <td style="border: 1px solid black; padding: 10px; vertical-align: top;">
+        <ul style="margin: 0; padding-left: 20px;">
+          <li>Technical overhead</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 10px; color: #b22222; font-weight: bold; font-size: 1.1em;">Fixed Cost</td>
+      <td style="border: 1px solid black; padding: 10px; vertical-align: top;">
+        <ul style="margin: 0; padding-left: 20px;">
+          <li style="font-style: italic;">Machine and tools depreciation</li>
+        </ul>
+      </td>
+      <td style="border: 1px solid black; padding: 10px; vertical-align: top;">
+        <ul style="margin: 0; padding-left: 20px;">
+          <li style="font-style: italic;">Main office overhead</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+        </div>
+			 </div>
+			 
+		<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">15→19. Risk Management
+</h3>
+
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">  
+        <p style="color: red;" class="mb-4">
+            <strong style="color: black;">Risk Management </strong> <br>
+focuses on proactively preventing things that can go wrong and helping things to go right.
+            <br><br>
+            <strong style="color: black;">	How to behave when things go wrong.
+</strong> <br>
+        </p>
+
+        <div class="flex justify-center w-full mt-auto"> 
+            <div class="w-1/2 bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/Picture29.jpg"
+                     alt="Seals Types"
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+        </div>
+        </div>
+</div>
+        </div>
+    </div>
+        </section>
+
+ <!-- Slide 213: Risk Management…-->
+<section id="slide-12" class="slide">
+           <div class="slide-content-wrapper">
+
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+	 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Risk Management…</h3>
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+      <p style=" color: black;" class="mb-4 text-center">
+<strong> Response Strategies </strong> 
+ <br>
+ </p>
+ <div style="display: flex; gap: 50px; font-family: Arial, sans-serif; background-color: white; padding: 20px;">
+  
+  <div style="flex: 1;">
+    <h2 style="color: #c00000; text-decoration: underline; margin-bottom: 10px;">Threats</h2>
+    <ul style="list-style-type: disc; color: #0070c0; font-weight: bold; font-size: 1.5em; padding-left: 20px;">
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;">Avoid</span></li>
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;">Mitigate</span></li>
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;">Transfer</span></li>
+    </ul>
+  </div>
+
+  <div style="flex: 1;">
+    <h2 style="color: #c00000; text-decoration: underline; margin-bottom: 10px;">Opportunities</h2>
+    <ul style="list-style-type: disc; color: #0070c0; font-weight: bold; font-size: 1.5em; padding-left: 20px;">
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;">Exploit</span></li>
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;">Enhance</span></li>
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;">Share</span></li>
+    </ul>
+  </div>
+
+</div>
+    <div class="flex justify-center w-full mt-auto"> 
+            <div class="w-1/3 bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/Picture30.jpg"
+                     alt="Seals Types"
+                     class="zoomable w-full h-auto object-contain cursor-zoom-in">
+            </div>
+        </div>
+        </div>
+			 </div>
+			 
+		 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Risk Management…
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+		      <p style=" color: black;" class="mb-4 ">
+ <br><strong style=" color: red;"> Example: </strong> 
+ <br> <br>
+ Through the studies to prepare a financial offer, we found out that the current cost of cement is 500 LE/ton and there is a probability of 10% that it would increase to 700 LE/ton during the project execution period.
+ <br> <br>
+ As a respond of this risk, we will implement one of the following alternatives:
+  <br>
+ <strong style=" color: blue;">- Transfer the risk </strong> by adding a binding formula to increase the prices upon any increment in cement cost. Or
+  <br>
+ <strong style=" color: blue;">- Add a Contingency Reserve </strong> due to predicted increment in cost 	impact x probability= 200 x 10% = 20 LE/ton.
+
+ </p>
+			
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+
+ <!-- Slide 213: Risk Management…-->
+<section id="slide-12" class="slide">
+             <div class="slide-content-wrapper">
+
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+	<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Risk Management…
+</h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        <p style="color: black;" class="mb-4">
+            <strong>Reserves</strong><br>
+        </p>
+ <div style="display: flex; gap: 50px; font-family: Arial, sans-serif; background-color: white; padding: 20px;">
+  
+  <div style="flex: 1;">
+    <h2 style="color: #c00000; text-decoration: underline; margin-bottom: 10px;">Contingency Reserve</h2>
+    <ul style="list-style-type: disc; color: #0070c0; font-size: 20px; padding-left: 20px;">
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;"> “Known Unknown;” items you identified in the risk management</span></li>
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;">Residual risk</span></li>
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;">Calculated</span></li>
+          <li style="margin-bottom: 10px;"><span style="color: #0070c0;">Part of the cost baseline</span></li>
+	</ul>
+  </div>
+
+  <div style="flex: 1;">
+    <h2 style="color: #c00000; text-decoration: underline; margin-bottom: 10px;">Management Reserve</h2>
+    <ul style="list-style-type: disc; color: #0070c0; font-size: 20px; padding-left: 20px;">
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;">“Unknown Unknowns;” items you didn’t or couldn’t identify in the risk management</span></li>
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;">Estimated</span></li>
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;">Part of the Project Budget</span></li>
+      <li style="margin-bottom: 10px;"><span style="color: #0070c0;">Management approval is needed to be used </span></li>
+	</ul>
+  </div>
+
+</div>
+      
+</div>
+	</div>		 
+		 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">Risk Management…
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+
+<p style="color: black;">
+<br>
+<strong>Reserves.. 
+</strong><br><br>
+</p>
+
+			<div class="w-full h-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/Picture31.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+
+ <!-- Slide 213: MONITORING & CONTROLLING-->
+<section id="slide-12" class="slide">
+                <div class=" bg-white p-10 md:p-16 ">
+        
+        <span class="block text-sm font-bold text-red-700 uppercase tracking-widest mb-2">TARGET QUALITY MANAGEMENT SYSTEM</span>
+        
+        <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-tight">
+MONITORING & CONTROLLING
+        </h1>
+        
+        <div class="w-24 h-1 bg-yellow-500 mx-auto mb-8 rounded-full"></div> 
+        
+        <div class="w-full">
+            <div class="flex justify-end">
+                <div class="text-4xl font-extrabold text-slate-800">
+                    <span class="text-red-700">T</span>ARGET
+                </div>
+            </div>
+        </div>
+        
+    </div>
+        </section>
+
+ <!-- Slide 213: MONITORING & CONTROLLING -->
+<section id="slide-12" class="slide">
+            <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+       MONITORING & CONTROLLING
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        
+        <p style=" color: black;" class="mb-4">
+The schedule control consists of measuring the performance against the plan, and taking preventive and corrective actions during the life of the project.
+
+<br>
+<br>
+        </p>
+        <p style=" color: black;" class="mb-4">
+We usually use periodically and non-periodically performance reports and meetings to assist controlling the project.
+
+<br>
+   </p>     
+        </div>
+</div>
+			
+			 <div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+                 style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 20px; margin-left: auto;">
+	     <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">PERFORMANCE
+MEASUREMENT & FOLLOW-UP
+
+</h3>
+                 <div class="bg-gray-100 flex flex-col h-full overflow-hidden">  
+                   <p style=" color: black;" class="mb-4">
+				   <br>
+	The progress measurement reports should comply with the “Schedule Management Plan” and may include:
+<br><br>
+- Narrative Report<br>
+- Progress Sheet (Control Sheet / Spread Sheet)<br>
+- Updated Schedules<br>
+- Look-ahead Schedules<br>
+- Workforce Status<br>
+- Earned Value Measurements<br>
+- Graphical Reports
+<br>
+        </p>
+     
+            </div>
+            </div>
+        </div>
+    </div>
+        </section>
+
+ <!-- Slide 213: Narrative Report-->
+<section id="slide-12" class="slide">
+               <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+      Narrative Report
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        
+        <p style=" color: black;" class="mb-4">
+	This report is developed using compositional sentences and summary tables . It should be simple, summarized and comprehensive as possible; and should contain information such as:
+
+<br>
+<br>
+1. Brief description of the project scope of work and key information.<br>
+
+2. Critical milestones planned and actual dates.<br>
+
+3. Total planned and actual performed quantities.<br>
+
+4. Scope of work, status report, and progress report for each main discipline.<br>
+
+5. Delay analysis and corrective actions.<br>
+
+6. Planned activities in the next period.<br>
+
+7. Total consumption of manpower and major equipment.<br>
+8. Area of concern.<br>
+9. Pictures.
+
+        </p>   
+        </div>
+</div>
+			
+	<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; border: 1px solid #e2e8f0; border-radius: 20px; min-height: 450px; padding: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 22px; color: #1e293b;" class="font-bold mb-4 slide-header">
+        Narrative Report
+    </h3>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        
+        <div style="background-color: #f8fafc; overflow: hidden; border-radius: 12px; border: 1px solid #cbd5e1;">
+            <img src="images/Picture33.jpg"
+                 alt="Report Image 1"
+                 class="zoomable w-full h-[150px] object-cover cursor-zoom-in">
+        </div>
+
+        <div style="background-color: #f8fafc; overflow: hidden; border-radius: 12px; border: 1px solid #cbd5e1;">
+            <img src="images/Picture34.jpg"
+                 alt="Report Image 2"
+                 class="zoomable w-full h-[150px] object-cover cursor-zoom-in">
+        </div>
+
+        <div style="grid-column: span 2; background-color: #f8fafc; overflow: hidden; border-radius: 12px; border: 1px solid #cbd5e1;">
+            <img src="images/Picture35.jpg"
+                 alt="Report Image 3"
+                 class="zoomable w-full h-[200px] object-cover cursor-zoom-in">
+        </div>
+
+    </div>
+</div>
+        </div>
+    </div>
+        </section>
+
+ <!-- Slide 213: Progress Sheet-->
+<section id="slide-12" class="slide">
+               <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+    Progress Sheet
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        
+        <p style=" color: black;" class="mb-4">
+	Progress Sheet (also called Control Sheet) is a tabular report that measure the progress of the project by
+	comparing between planned and actual status up-to-date.<br>
+<br>
+This sheet is the base of most of other reports, and its mainly outputs are:<br>
+
+* Activities and WBS elements planned and actual percentage   completion.<br>
+
+* Each activity scheduled and actual performed quantities.
+<br>
+<br>
+
+
+<strong style=" color: red;">Remember: </strong><br>The Progress Sheets are useful tools to illustrate the deviation in progress, but to estimate the  impact of this deviation on the project we need to develop an Updated Schedule.
+<br>
+        </p>   
+        </div>
+</div>
+			
+	<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; border: 1px solid #e2e8f0; border-radius: 20px; min-height: 450px; padding: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 22px; color: #1e293b;" class="font-bold mb-4 slide-header">
+        Narrative Report
+    </h3>
+
+	<div class="w-full h-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/Picture36.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>
+</div>
+        </div>
+    </div>
+        </section>
+
+ <!-- Slide 213: Progress Sheet-->
+<section id="slide-12" class="slide">
+               <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+   <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto; border: 1px solid #e2e8f0;">
+             <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+
+    <h3 style="font-size: 24px; color: #1e293b;" class="font-bold mb-4 slide-header">
+        Progress Sheet 
+    </h3>
+    
+    <div class="bg-gray-50 flex flex-col h-full overflow-hidden p-6 rounded-xl" style="color: #003366;">
+        
+        <ol style="list-style-type: decimal; padding-left: 20px; font-weight: bold; line-height: 1.8;">
+            <li class="mb-2">Project title and Schedule Baseline revision number</li>
+            <li class="mb-2">Data Date (DD)</li>
+            
+            <div style="position: relative; border-left: 2px solid #5da9e1; margin-left: -5px; padding-left: 15px;">
+                <li class="mb-2">WBS element description</li>
+                <li class="mb-2">Activity ID and description</li>
+                <li class="mb-2">Early Start (ES) and Early Finish (EF)</li>
+                <span style="position: absolute; right: -1px; top: 20%; color: #5da9e1; font-size: 20px; font-weight: normal; width: 80px; text-align: left;">
+                    } Copy from scheduling software
+                </span>
+            </div>
+
+            <li class="mb-2">Activity total quantity (QTY)</li>
+            
+            <li class="mb-1">Activity effort in man-hours</li>
+            <p style="color: #2b78b5; font-style: italic; font-weight: normal; margin-left: 20px; margin-bottom: 10px;">
+                = QTY x Effort Per QTY Unit
+            </p>
+
+            <li class="mb-1">Activity Relative Weight per WBS element (RW.WBS)</li>
+            <p style="color: #2b78b5; font-style: italic; font-weight: normal; margin-left: 20px; margin-bottom: 10px;">
+                = Activity Effort / Sum of efforts within the WBS Element
+            </p>
+
+            <li class="mb-1">Activity Relative Weight per project (RW.PRJ)</li>
+            <p style="color: #2b78b5; font-style: italic; font-weight: normal; margin-left: 20px;">
+                = Activity Effort / Sum of efforts within the Project
+            </p>
+        </ol>
+
+    </div>
+</div>
+</div>
+	<div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; border-radius: 20px; min-height: 450px; padding: 30px; margin-right: auto; border: 1px solid #e2e8f0;">
+        <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+
+    <h3 style="font-size: 24px; color: #003366;" class="font-bold mb-6 slide-header">
+         Progress Sheet Content 
+    </h3>
+
+    <div class="overflow-hidden rounded-lg border border-slate-300 mb-8">
+	 <p style=" color: #003366; font-weight: bold;" class="mb-4">
+10. Activity Planned Completion (%PL)
+</p>
+        <table style="width: 100%; border-collapse: collapse; text-align: center; font-family: Arial, sans-serif;">
+            <thead>
+                <tr style="background-color: #4f81bd; color: white;">
+                    <th style="padding: 12px; border: 1px solid #385d8a;">Planned Status</th>
+                    <th style="padding: 12px; border: 1px solid #385d8a;">Logical Condition</th>
+                    <th style="padding: 12px; border: 1px solid #385d8a;">% PL</th>
+                </tr>
+            </thead>
+            <tbody style="color: #0070c0; font-weight: bold;">
+                <tr style="background-color: #dbe5f1;">
+                    <td style="padding: 12px; border: 1px solid #385d8a;">not started</td>
+                    <td style="padding: 12px; border: 1px solid #385d8a;">ES > DD</td>
+                    <td style="padding: 12px; border: 1px solid #385d8a;">0%</td>
+                </tr>
+                <tr style="background-color: #f2f2f2;">
+                    <td style="padding: 12px; border: 1px solid #385d8a;">completed</td>
+                    <td style="padding: 12px; border: 1px solid #385d8a;">EF &lt; DD </td>
+                    <td style="padding: 12px; border: 1px solid #385d8a;">100%</td>
+                </tr>
+                <tr style="background-color: #dbe5f1;">
+                    <td style="padding: 12px; border: 1px solid #385d8a;">in-progress</td>
+                    <td style="padding: 12px; border: 1px solid #385d8a;">ES &lt; DD &lt; EF</td>
+                    <td style="padding: 12px; border: 1px solid #385d8a;">
+                        <div style="display: inline-block; text-align: center; vertical-align: middle;">
+                            <div style="border-bottom: 2px solid #0070c0; padding-bottom: 2px;">consumed duration</div>
+                            <div style="padding-top: 2px;">OD</div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="font-family: Arial, sans-serif; line-height: 1.8;">
+        <h4 style="color: #c00000; text-decoration: underline; font-size: 19px; margin-bottom: 12px; font-weight: bold;">
+            Using Microsoft Office Excel®
+        </h4>
+        <ul style="list-style-type: disc; color: #0070c0; padding-left: 20px; font-size: 16px;">
+            <li style="margin-bottom: 10px;">
+                For a Task use the function: 
+                <span style="color: #00b050; font-weight: bold; font-style: italic; margin-left: 5px;">
+                    fx =IF(ES &gt; DD;0;IF(EF &lt; DD;1;(DD-ES+1)/(EF-ES+1)))
+                </span>
+            </li>
+            <li style="margin-bottom: 10px;">
+                For a Start Milestone use the function: 
+                <span style="color: #00b050; font-weight: bold; font-style: italic; margin-left: 5px;">
+                    fx =IF(ES &gt; DD;0;1)
+                </span>
+            </li>
+            <li>
+                For a Finish Milestone use the function: 
+                <span style="color: #00b050; font-weight: bold; font-style: italic; margin-left: 5px;">
+                    fx =IF(EF &lt; DD;1;0)
+                </span>
+            </li>
+        </ul>
+    </div>
+
+</div>		
+  </div>
+  </div>  
+    </div>
+        </section>
+
+ <!-- Slide 213: Progress Sheet-->
+<section id="slide-12" class="slide">
+               <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+<div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; border-radius: 20px; min-height: 450px; padding: 30px; margin-right: auto; border: 1px solid #e2e8f0;">
+            <h3 style="font-size: 24px; color: #1e293b;" class="font-bold mb-4 slide-header">
+        Progress Sheet 
+    </h3>
+		<div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+
+    <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+
+        <div class="mb-5">
+            <h3 style="font-size: 18px; color: #003366; font-weight: bold; margin-bottom: 5px;">
+                11. Activity Actual Completion (% ACT)
+            </h3>
+            <p style="color: #2b78b5; font-style: italic; margin-left: 25px;">
+                Directly updated with the site data, linked with another detailed sheet, or <br>
+                = Actual Performed QTY / Total QTY
+            </p>
+        </div>
+
+        <div class="mb-5">
+            <h3 style="font-size: 18px; color: #003366; font-weight: bold; margin-bottom: 5px;">
+                12. WBS element Planned Completion
+            </h3>
+            <p style="color: #2b78b5; font-style: italic; margin-left: 25px; margin-bottom: 5px;">
+                = each of its activities % PL x RW.WBS
+            </p>
+            <p style="color: #00b050; font-weight: bold; font-style: italic; margin-left: 25px;">
+                fx =SUMPRODUCT(1ST %PL : last %PL ; 1ST RW : last RW)
+            </p>
+        </div>
+
+        <div class="mb-5">
+            <h3 style="font-size: 18px; color: #003366; font-weight: bold; margin-bottom: 5px;">
+                13. WBS element Actual Completion
+            </h3>
+            <p style="color: #2b78b5; font-style: italic; margin-left: 25px; margin-bottom: 5px;">
+                = each of its activities % ACT x RW.WBS
+            </p>
+            <p style="color: #00b050; font-weight: bold; font-style: italic; margin-left: 25px;">
+                fx =SUMPRODUCT(1ST %ACT : last %ACT ; 1ST RW : last RW)
+            </p>
+        </div>
+
+        <div class="mb-5">
+            <h3 style="font-size: 18px; color: #003366; font-weight: bold; margin-bottom: 5px;">
+                14. Planned Performed Quantity
+            </h3>
+            <p style="color: #2b78b5; font-style: italic; margin-left: 25px;">
+                = Total QNT x % PL
+            </p>
+        </div>
+
+        <div class="mb-2">
+            <h3 style="font-size: 18px; color: #003366; font-weight: bold; margin-bottom: 5px;">
+                15. Actual Performed Quantity
+            </h3>
+            <p style="color: #2b78b5; font-style: italic; margin-left: 25px;">
+                Directly updated with the site data, linked with another detailed sheet, or <br>
+                = Total QNT x % ACT
+            </p>
+        </div>
+
+    </div>
+</div>
+</div>	
+
+<div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; border-radius: 20px; min-height: 450px; padding: 30px; margin-right: auto; border: 1px solid #e2e8f0;">
+               <h3 style="font-size: 24px; color: #1e293b;" class="font-bold mb-4 slide-header">
+        Progress Sheet 
+    </h3>
+		   <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+
+    <div style="font-family: Arial, sans-serif; line-height: 1.8;">
+
+        <div class="mb-8">
+            <h3 style="font-size: 19px; color: #003366; font-weight: bold; margin-bottom: 5px;">
+                16. Deviation
+            </h3>
+            <p style="color: #2b78b5; font-size: 20px; font-style: italic; font-weight: bold; margin-left: 40px;">
+                = % ACT - %PL
+            </p>
+        </div>
+
+        <div class="mb-8">
+            <h3 style="font-size: 19px; color: #003366; font-weight: bold; margin-bottom: 5px;">
+                17. Deviation impact on overall project progress
+            </h3>
+            <p style="color: #2b78b5; font-size: 20px; font-style: italic; font-weight: bold; margin-left: 40px;">
+                = Deviation x RW.PRJ
+            </p>
+        </div>
+
+        <div class="mb-4">
+            <h3 style="font-size: 19px; color: #003366; font-weight: bold; margin-bottom: 8px;">
+                18. Activity Actual Start & Actual Finish
+            </h3>
+            <p style="color: #2b78b5; font-size: 18px; font-style: italic; margin-left: 40px; font-weight: normal;">
+                Typed manually for the record
+            </p>
+        </div>
+
+    </div>
+</div>
+</div>  
+</div>  
+
+  </div> 
+        </section>
+
+ <!-- Slide 213: Progress Sheet-->
+<section id="slide-12" class="slide">
+               <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+    Progress Sheet
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        
+        <p style=" color: black;" class="mb-4">
+	<strong style=" color: red;">Weighting Factor:</strong>
+<br>
+
+- The weighting factor can also be assigned according to cost or price, and can differ between WBS levels.<br>
+
+- The suitable basis should be assigned for each phase (Engineering, Procurement, Construction)<br>
+
+- The weighting factor should be approved from the client, and should remain unchanged except for 
+a major variance in the estimated quantities, after obtaining the client approval.<br>
+
+        </p>   
+		  <p style=" color: black;" class="mb-4 text-center">
+	<strong>Updated Schedule</strong>
+<br>
+</p>
+			<div class="w-full h-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/picture37.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>
+        </div>
+</div>
+			
+	<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; border: 1px solid #e2e8f0; border-radius: 20px; min-height: 450px; padding: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 22px; color: #1e293b;" class="font-bold mb-4 slide-header">
+Look-ahead Schedules(and Look-behind Schedules)    </h3>
+
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+
+	     <p style=" color: black;" class="mb-4">
+
+A display of the performed and the planned activities within a certain period of time.
+<br><br>
+It is developed from the updated schedule by showing only  the activities within the dedicated period.
+        </p> 
+			  <p style=" color: black;" class="mb-4  text-center">
+	<strong>Look-ahead Schedule</strong>
+<br>
+</p>
+			<div class="w-full h-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/picture38.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>
+</div>
+        </div>
+		 </div>
+    </div>
+        </section>
+
+ <!-- Slide 213: Graphical Reports-->
+<section id="slide-12" class="slide">
+               <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+   Graphical Reports
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        
+        <p style=" color: black;" class="mb-4">
+	<strong style=" color: red;">S-Curve</strong>
+<br>
+Represents monthly planned/actual percentages and overall project duration. 
+
+        </p>   
+			<div class="w-full h-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/Picture39.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>
+        </div>
+</div>
+			
+	<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; border: 1px solid #e2e8f0; border-radius: 20px; min-height: 450px; padding: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 22px; color: #1e293b;" class="font-bold mb-4 slide-header">
+Graphical Reports    </h3>
+
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+
+	     <p style=" color: black;" class="mb-4">
+
+<strong style=" color: red;">Manpower Histograms & Equipment Histograms</strong>
+<br><br>
+Represent the distribution for each craft / equipment along the project duration.
+        </p> 
+	<div class="w-full h-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/Picture40.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>
+</div>
+        </div>
+		 </div>
+    </div>
+        </section>
+
+ <!-- Slide 213: PLANNERS PROFISSIONAL RESPONSIBILITIES-->
+<section id="slide-12" class="slide">
+                <div class=" bg-white p-10 md:p-16 ">
+        
+        <span class="block text-sm font-bold text-red-700 uppercase tracking-widest mb-2">TARGET QUALITY MANAGEMENT SYSTEM</span>
+        
+        <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-tight">
+PLANNERS PROFISSIONAL RESPONSIBILITIES
+        </h1>
+        
+        <div class="w-24 h-1 bg-yellow-500 mx-auto mb-8 rounded-full"></div> 
+        
+        <div class="w-full">
+            <div class="flex justify-end">
+                <div class="text-4xl font-extrabold text-slate-800">
+                    <span class="text-red-700">T</span>ARGET
+                </div>
+            </div>
+        </div>
+        
+    </div>
+        </section>
+		
+ <!-- Slide 213: PLANNERS ROLE OVER THE PROJECT’S PHASES-->
+<section id="slide-12" class="slide">
+               <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+ PLANNERS ROLE OVER THE PROJECT’S PHASES
+
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        
+        <p style=" color: black;" class="mb-4">
+	<strong style=" color: red;" class="text-center">Proposal Phase</strong>
+<br>
+        </p>   
+			<div class="w-full h-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/picture41.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>
+        </div>
+</div>
+			
+	<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; border: 1px solid #e2e8f0; border-radius: 20px; min-height: 450px; padding: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 22px; color: #1e293b;" class="font-bold mb-4 slide-header">
+ PLANNERS ROLE OVER THE PROJECT’S PHASES   </h3>
+
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+
+	     <p style=" color: black;" class="mb-4">
+
+<strong style=" color: red;">Planning Phase</strong>
+<br>        </p> 
+	<div class="w-full h-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/picture42.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>
+</div>
+        </div>
+		 </div>
+    </div>
+        </section>
+
+ <!-- Slide 213: PLANNERS ROLE OVER THE PROJECT’S PHASES-->
+<section id="slide-12" class="slide">
+               <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+ PLANNERS ROLE OVER THE PROJECT’S PHASES
+
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        
+        <p style=" color: black;" class="mb-4">
+	<strong style=" color: red;" class="text-center">Execution Phase</strong>
+<br>
+        </p>   
+			<div class="w-full h-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/picture43.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>
+        </div>
+</div>
+			
+	<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; border: 1px solid #e2e8f0; border-radius: 20px; min-height: 450px; padding: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 22px; color: #1e293b;" class="font-bold mb-4 slide-header">
+ PLANNERS ROLE OVER THE PROJECT’S PHASES   </h3>
+
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+
+	     <p style=" color: black;" class="mb-4">
+
+<strong style=" color: red;">Execution Phase…</strong>
+<br>        </p> 
+	<div class="w-full h-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/picture44.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>
+</div>
+        </div>
+		 </div>
+    </div>
+        </section>
+
+ <!-- Slide 213: PLANNERS ROLE OVER THE PROJECT’S PHASES-->
+<section id="slide-12" class="slide">
+               <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+ PLANNERS ROLE OVER THE PROJECT’S PHASES
+
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        
+        <p style=" color: black;" class="mb-4">
+	<strong style=" color: red;" class="text-center">Closing Phase</strong>
+<br>
+        </p>   
+			<div class="w-full h-full bg-slate-100 overflow-hidden rounded-lg shadow-md">
+                <img src="images/picture45.jpg"
+                     alt="صورة نظام تحكم تعاقبي"
+                     class="zoomable w-full h-full object-contain cursor-zoom-in">
+            </div>
+        </div>
+</div>
+			
+	<div class="training-card off-job w-full md:w-[45%] p-6 rounded-xl shadow relative" 
+     style="background-color: white; border: 1px solid #e2e8f0; border-radius: 20px; min-height: 450px; padding: 20px; margin-left: auto;">
+    
+    <h3 style="font-size: 22px; color: #1e293b;" class="font-bold mb-4 slide-header">
+COMPETITIVE SKILLS   </h3>
+
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+
+	     <p style=" color: black;" class="mb-4">
+
+<strong style=" color: red;">Group Discussion</strong>
+<br>    
+<br>    
+** What are the skills required from a Planning and Project Control Engineer?<br>  <br>      
+** How can you enhance these skills?
+
+    </p> 
+</div>
+        </div>
+		 </div>
+    </div>
+        </section>
+
+ <!-- Slide 213: PLANNERS ROLE OVER THE PROJECT’S PHASES-->
+<section id="slide-12" class="slide">
+               <div class="slide-content-wrapper">
+        
+        <div class="flex flex-col md:flex-row gap-8 justify-center items-stretch relative pt-20" style="padding-bottom: 80px;">  
+
+    <div class="training-card on-job w-full md:w-[45%] p-6 rounded-xl shadow relative"
+     style="background-color: white; color: white; border-radius: 20px; min-height: 450px; padding-top: 50px; margin-right: auto;">
+    
+    <h3 style="font-size: 20px;" class="text-3xl font-bold text-slate-800 mb-2 slide-header">
+Continue Enhancing Your Skills
+
+    </h3>
+    
+    <div class="bg-gray-100 flex flex-col h-full overflow-hidden p-4 rounded-xl">
+        
+        <p style=" color: black;" class="mb-4">
+		 - Understand your strengthens and weaknesses.<br><br>
+
+- Upgrade your technical skills and look for new information and practices in the field.<br><br>
+
+- Enhance your language, communication, and negotiation skills.<br><br>
+
+- Improve your tacit knowledge and know more about how things go in your company.<br><br>
+And finally….
+<br>
+- Coach, mentor, and share lessons learned.
+
+<br>
+        </p>   
+        </div>
+</div>
+
+		 </div>
+    </div>
+        </section>
+		
+<!-- Slide 59: Conclusion -->
+        <section id="slide-58" class="slide flex flex-col justify-center items-center text-center p-4">
+             <div class="bg-white p-10 md:p-16 rounded-2xl shadow-xl max-w-4xl w-full">
+                <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">✓</div>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">Course Complete</h1>
+                <p class="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">Thank You</p>
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-full shadow-lg">
+                    Restart Course
+                </button>
+            </div>
+        </section>
+		
+		
+   </main>
+
+    <!-- Footer: Nav -->
+       <footer class="bg-white shadow-inner p-4 z-10 flex-shrink-0 border-t border-slate-200">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <button id="prev-btn" class="bg-white border border-slate-300 text-slate-700 font-bold py-2 px-6 rounded-lg shadow-sm hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            Previous
+        </button>
+        <div class="flex-1 mx-4">
+            <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 0%;"></div> 
+            </div>
+        </div>
+        <button id="next-btn" class="bg-blue-800 text-white font-bold py-2 px-6 rounded-lg shadow hover:bg-blue-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+            Next
+        </button>
+    </div>
+</footer>
+
+  <!-- Zoom Overlay -->
+<div id="zoomOverlay"
+     class="hidden fixed inset-0 bg-black/80 flex items-center justify-center overflow-hidden z-50">
+    <img id="zoomedImage"
+         class="max-w-[90%] max-h-[90%] rounded-lg transition-transform cursor-zoom-out"
+         src="">
+</div>
+
+   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const slideCounter = document.getElementById('slide-counter');
+        const progressBar = document.getElementById('progress-bar');
+        
+        // ** إضافة متغير حالة البدء وربط زر Start **
+        let isStarted = false; 
+        const startButton = document.getElementById('start-btn'); // يجب أن يكون هذا الـ ID موجوداً في HTML الشريحة 0
+        // ... (بقية المتغيرات)
+
+        const videoModal = document.getElementById('video-modal');
+        const videoModalContent = document.getElementById('video-modal-content');
+        const youtubeIframe = document.getElementById('youtube-iframe');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const playVideoBtns = document.querySelectorAll('.play-video-btn');
+
+        function showSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            
+            slides[currentSlideIndex].classList.remove('slide-visible');
+            slides[currentSlideIndex].classList.add('slide-hidden');
+            
+            slides[index].classList.remove('slide-hidden');
+            slides[index].classList.add('slide-visible');
+            
+            currentSlideIndex = index;
+            updateNavigation();
+            
+            // Scroll top content
+            const content = slides[index].querySelector('.slide-content-wrapper');
+            if (content) content.scrollTop = 0;
+        }
+
+        function updateNavigation() {
+            slideCounter.textContent = `Slide ${currentSlideIndex + 1} / ${totalSlides}`;
+            const progressPercentage = ((currentSlideIndex + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+            
+            prevButton.disabled = (currentSlideIndex === 0);
+            
+            // ** المنطق المُعدّل لزر Next **
+            // يتم التعطيل فقط إذا: 
+            // 1. كنا في الشريحة الأخيرة.
+            // 2. أو كنا في الشريحة 0 ولم نضغط على Start بعد.
+            const shouldBeDisabled = (currentSlideIndex === totalSlides - 1) || 
+                                     (currentSlideIndex === 0 && !isStarted);
+                                     
+            nextButton.disabled = shouldBeDisabled;
+        }
+
+        prevButton.addEventListener('click', () => showSlide(currentSlideIndex - 1));
+        
+        // ** ملاحظة: زر Next سيتفعل تلقائياً بعد الانتقال للشريحة 1 **
+        nextButton.addEventListener('click', () => showSlide(currentSlideIndex + 1));
+
+        // ** مستمع حدث زر Start (التعديل الرئيسي) **
+        if (startButton) {
+            startButton.addEventListener('click', () => {
+                isStarted = true; // تفعيل حالة البدء
+                
+                // الانتقال إلى الشريحة التالية (الشريحة 1)
+                showSlide(currentSlideIndex + 1);
+                
+                // إخفاء زر Start بعد بدء الدورة
+                // إذا لم تكن تريد إخفاءه، احذف السطر التالي
+                startButton.classList.add('hidden'); 
+            });
+        }
+        
+        // ... (بقية أكواد الـ Video Modals والـ Zoom)
+
+        const zoomableImages = document.querySelectorAll(".zoomable");
+        const overlay = document.getElementById("zoomOverlay");
+        const zoomImg = document.getElementById("zoomedImage");
+
+        let scale = 1;
+        let isDragging = false;
+        let startX, startY;
+        let translateX = 0;
+        let translateY = 0;
+
+        zoomableImages.forEach(img => {
+            img.addEventListener("click", () => {
+                zoomImg.src = img.src;
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                zoomImg.style.transform = `translate(0px, 0px) scale(1)`;
+                overlay.classList.remove("hidden");
+            });
+        });
+
+        overlay.addEventListener("click", (e) => {
+            if (e.target === overlay) {
+                overlay.classList.add("hidden");
+            }
+        });
+
+        zoomImg.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            scale += e.deltaY < 0 ? 0.1 : -0.1;
+            if (scale < 1) scale = 1;
+            if (scale > 5) scale = 5;
+            zoomImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        });
+
+        zoomImg.addEventListener("mousedown", (e) => {
+            if (scale <= 1) return;
+            isDragging = true;
+            zoomImg.style.cursor = "grabbing";
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+        });
+
+        zoomImg.addEventListener("mousemove", (e) => {
+            if (!isDragging) return;
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            zoomImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        });
+
+        zoomImg.addEventListener("mouseup", () => {
+            isDragging = false;
+            zoomImg.style.cursor = "grab";
+        });
+
+        zoomImg.addEventListener("mouseleave", () => {
+            isDragging = false;
+        });
+        
+        // تهيئة البدء
+        updateNavigation();
+    });
+</script>
+
+</body>
+</html>
